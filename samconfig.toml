@@ -28,3 +28,6 @@ warm_containers = "EAGER"
 
 [default.local_start_lambda.parameters]
 warm_containers = "EAGER"
+
+[test.local_start_api.parameters]
+env_vars = "env.test.json"
