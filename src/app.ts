@@ -19,6 +19,8 @@ type Body = {
  *
  */
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    console.info('chegou porra');
+
     try {
         if (!event || !event.body) {
             return {
@@ -31,7 +33,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         try {
             body = JSON.parse(event.body);
 
-            if (!body) {
+            if (!body || !body.page) {
                 return {
                     statusCode: 415,
                     body: JSON.stringify({ error: 'Incorrect body' }),
@@ -47,6 +49,9 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         const { page } = body;
         const ip = event.headers['x-forwarded-for'] || event.headers['remote-host'] || 'unknown-ip';
         const rateLimitKey = `rate-limit:${ip}:${page}`;
+
+        console.info(ip, rateLimitKey);
+
         const isRateLimited = await client.exists(rateLimitKey);
 
         if (isRateLimited) {
