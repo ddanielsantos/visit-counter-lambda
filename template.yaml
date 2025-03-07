@@ -15,6 +15,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - VPCAccessPolicy: {}
       CodeUri: src/
       Handler: app.lambdaHandler
       Runtime: nodejs20.x
@@ -35,7 +38,7 @@ Resources:
           - subnet-abcdef0123456789
       Environment:
         Variables:
-          REDIS_HOST: !GetAtt RedisCluster.PrimaryEndPoint.Address
+          REDIS_HOST: !GetAtt RedisInstance.RedisEndpoint.Address
 
   RedisInstance:
     Type: AWS::ElastiCache::CacheCluster
@@ -54,10 +57,6 @@ Resources:
       SubnetIds:
         - subnet-0123456789abcdef0
         - subnet-abcdef0123456789
-
-  RedisInstanceAddress:
-    Description: Redis Instance Endpoint
-    Value: !GetAtt RedisInstance.PrimaryEndPoint.Address
 
   GatewayApi:
     Type: AWS::Serverless::Api
