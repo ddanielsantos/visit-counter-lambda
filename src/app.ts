@@ -19,8 +19,6 @@ type Body = {
  *
  */
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    console.info('chegou porra');
-
     try {
         if (!event || !event.body) {
             return {
@@ -47,7 +45,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         }
 
         const { page } = body;
-        const ip = event.headers['x-forwarded-for'] || event.headers['remote-host'] || 'unknown-ip';
+        const ip = getIp(event);
         const rateLimitKey = `rate-limit:${ip}:${page}`;
 
         console.info(ip, rateLimitKey);
@@ -81,3 +79,21 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         };
     }
 };
+
+const getIp = (event: APIGatewayProxyEvent) => {
+    if (!event) {
+        return 'unknown-ip';
+    }
+
+    if (event.headers !== null) {
+        if (event.headers['x-forwarded-for']) {
+            return event.headers['x-forwarded-for'];
+        }
+
+        if (event.headers['remote-host']) {
+            return event.headers['remote-host'];
+        }
+    }
+
+    return 'unknown-ip';
+}
