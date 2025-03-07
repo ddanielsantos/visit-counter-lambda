@@ -38,23 +38,25 @@ Resources:
           - subnet-086ab84c8e0aa9cde
       Environment:
         Variables:
-          REDIS_HOST: !GetAtt RedisInstance.PrimaryEndPoint.Address
+          REDIS_HOST: !GetAtt ValkeyInstance.PrimaryEndPoint.Address
 
-  RedisInstance:
+  ValkeyInstance:
     Type: AWS::ElastiCache::ReplicationGroup
     Properties:
       ReplicationGroupDescription: Valkey instance
       CacheNodeType: cache.t3.micro
       Engine: valkey
+      AutomaticFailoverEnabled: false
+      TransitEncryptionEnabled: false
       NumCacheClusters: 1
       SecurityGroupIds:
         - sg-08cc7328e9e33fffa
-      CacheSubnetGroupName: !Ref RedisSubnetGroup
+      CacheSubnetGroupName: !Ref ValkeySubnetGroup
 
-  RedisSubnetGroup:
+  ValkeySubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup
     Properties:
-      Description: "Subnet group for Redis instance"
+      Description: "Subnet group for Valkey instance"
       SubnetIds:
         - subnet-0061846dc0cdd8524
         - subnet-086ab84c8e0aa9cde
