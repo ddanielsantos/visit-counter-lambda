@@ -28,6 +28,8 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref GatewayApi
+            Auth:
+              ApiKeyRequired: true
             Path: /increment
             Method: post
       VpcConfig:
@@ -39,6 +41,27 @@ Resources:
       Environment:
         Variables:
           REDIS_HOST: !GetAtt ValkeyInstance.PrimaryEndPoint.Address
+
+  VisitCounterApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: VisitCounterApiKey
+      Enabled: true
+
+  VisitCounterUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: !Ref GatewayApi
+          Stage: Prod
+      UsagePlanName: VisitCounterUsagePlan
+
+  VisitCounterUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref VisitCounterApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref VisitCounterUsagePlan
 
   ValkeyInstance:
     Type: AWS::ElastiCache::ReplicationGroup
