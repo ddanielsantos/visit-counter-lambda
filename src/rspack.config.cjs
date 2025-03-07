@@ -1,9 +1,21 @@
 const path = require('path');
 const minify = require('terser-webpack-plugin');
 
+const devtool = (() => {
+    const sourceMapStrategy = 'source-map';
+    if (process.env.NODE_ENV !== 'production') {
+        console.info(`[INFO] source map strategy: ${sourceMapStrategy}`);
+        return sourceMapStrategy;
+    }
+
+    console.info('[INFO] source map disabled');
+    return false;
+})();
+
 module.exports = {
     mode: 'production',
     target: 'node',
+    devtool,
     entry: './app.ts',
     resolve: {
         extensions: ['.ts', '.js']
