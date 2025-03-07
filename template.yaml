@@ -32,10 +32,10 @@ Resources:
             Method: post
       VpcConfig:
         SecurityGroupIds:
-          - sg-0123456789abcdef0
+          - sg-0fb24d9929c7e1415
         SubnetIds:
-          - subnet-0123456789abcdef0
-          - subnet-abcdef0123456789
+          - subnet-0061846dc0cdd8524
+          - subnet-086ab84c8e0aa9cde
       Environment:
         Variables:
           REDIS_HOST: !GetAtt RedisInstance.RedisEndpoint.Address
@@ -47,7 +47,7 @@ Resources:
       Engine: redis
       NumCacheNodes: 1
       VpcSecurityGroupIds:
-        - sg-0123456789abcdef0
+        - sg-08cc7328e9e33fffa
       CacheSubnetGroupName: !Ref RedisSubnetGroup
 
   RedisSubnetGroup:
@@ -55,8 +55,8 @@ Resources:
     Properties:
       Description: "Subnet group for Redis instance"
       SubnetIds:
-        - subnet-0123456789abcdef0
-        - subnet-abcdef0123456789
+        - subnet-0061846dc0cdd8524
+        - subnet-086ab84c8e0aa9cde
 
   GatewayApi:
     Type: AWS::Serverless::Api
